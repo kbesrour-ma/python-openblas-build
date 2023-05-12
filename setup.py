@@ -72,7 +72,6 @@ class MyBuildCLib(build_clib):
         guess_libplat = glob.glob(os.path.join(cwd, 'build', 'lib*'))[0]
         install_prefix = os.path.join(guess_libplat, 'python_openblas_build')
         subprocess.check_call(["cmake",
-                               '-G', generator,
                                '-DCMAKE_BUILD_TYPE=Release',
                                '-DDYNAMIC_ARCH={}'.format(dynamic_arch),
                                '-DNOFORTRAN=1',
