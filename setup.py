@@ -59,7 +59,7 @@ class MyBuildCLib(build_clib):
         else:
             dynamic_arch = 1
             generator = "Unix Makefiles"
-            builder = ["make", "-j"]
+            builder = ["make", "-j2"]
 
         try:
             os.makedirs(self.build_temp)
