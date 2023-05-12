@@ -54,7 +54,7 @@ class MyBuildCLib(build_clib):
         dynamic_arch = int(platform != "win32")
         if platform == "win32":
             dynamic_arch = 0
-            generator = "Visual Studio 14 Win64"
+            generator = "Ninja"
             builder = ["cmake", "--build", "."]
         else:
             dynamic_arch = 1
@@ -72,6 +72,7 @@ class MyBuildCLib(build_clib):
         guess_libplat = glob.glob(os.path.join(cwd, 'build', 'lib*'))[0]
         install_prefix = os.path.join(guess_libplat, 'python_openblas_build')
         subprocess.check_call(["cmake",
+                               '-G', generator,
                                '-DCMAKE_BUILD_TYPE=Release',
                                '-DDYNAMIC_ARCH={}'.format(dynamic_arch),
                                '-DNOFORTRAN=1',
