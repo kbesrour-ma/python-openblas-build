@@ -88,20 +88,24 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Python path temporal fix
+        run: |
+          set PATH=%PATH%;%Python_ROOT_DIR%
+
       - name: Upgrade setuptools
         run: |
-          python.exe -m pip install setuptools -U
+          python -m pip install setuptools -U
 
       - name: Install deps
         run: |
-          python.exe -m pip install wheel
+          python -m pip install wheel
 
       - name: Build wheels
-        run: python.exe setup.py bdist_wheel --universal
+        run: python setup.py bdist_wheel --universal
 
       - name: Test non-windows wheels
         if: matrix.os != 'windows-2019'
-        run: python.exe install dist/*.whl
+        run: pip install dist/*.whl
 
       - name: Show ccache status
         continue-on-error: true
