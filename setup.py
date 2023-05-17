@@ -59,11 +59,11 @@ class MyBuildCLib(build_clib):
             generator = "Ninja"
             builder = ["cmake", "--build", "."]
             additional_args = [
-                "-DCMAKE_CXX_COMPILER=clang-cl",
-                "-DCMAKE_C_COMPILER=clang-cl",
-                "-DCMAKE_Fortran_COMPILER=flang",
-                "-DCMAKE_MT=mt",
-                "-DDYNAMIC_ARCH=ON",
+                "-DTARGET=CORE2",
+                "-DBINARY=64",
+                "-DINTERFACE64=1",
+                "-DCMAKE_C_COMPILER_LAUNCHER=ccache",
+                "-DCMAKE_Fortran_COMPILER_LAUNCHER=ccache",
             ]
         else:
             dynamic_arch = 1
