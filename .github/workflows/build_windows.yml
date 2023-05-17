@@ -88,23 +88,20 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Check
-        run: |
-          dir C:/hostedtoolcache/windows/Python/3.8.10/x64
       - name: Upgrade setuptools
         run: |
-          python -m pip install setuptools -U
+          python.exe -m pip install setuptools -U
 
       - name: Install deps
         run: |
-          python -m pip install wheel
+          python.exe -m pip install wheel
 
       - name: Build wheels
-        run: python setup.py bdist_wheel --universal
+        run: python.exe setup.py bdist_wheel --universal
 
       - name: Test non-windows wheels
         if: matrix.os != 'windows-2019'
-        run: pip install dist/*.whl
+        run: python.exe install dist/*.whl
 
       - name: Show ccache status
         continue-on-error: true
