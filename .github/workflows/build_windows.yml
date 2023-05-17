@@ -89,7 +89,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Python path temporal fix
-        run: mklink "%pythonLocation%\python3.exe" "%pythonLocation%\python.bat"
+        run:  echo "%pythonLocation%" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
 
       - name: Upgrade setuptools
         run: |
