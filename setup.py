@@ -59,7 +59,6 @@ class MyBuildCLib(build_clib):
             generator = "Ninja"
             builder = ["cmake", "--build", "."]
             additional_args = [
-                "-DTARGET=CORE2",
                 "-DBINARY=64",
                 "-DINTERFACE64=1",
                 "-DCMAKE_C_COMPILER_LAUNCHER=ccache",
