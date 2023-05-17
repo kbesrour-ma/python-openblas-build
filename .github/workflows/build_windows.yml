@@ -89,8 +89,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Python path temporal fix
-        run: |
-          set PATH=%PATH%;%Python_ROOT_DIR%
+      - name: Configure Python 3
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: mklink "%pythonLocation%\python3.exe" "%pythonLocation%\python.bat"
 
       - name: Upgrade setuptools
         run: |
