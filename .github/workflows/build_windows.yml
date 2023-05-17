@@ -81,7 +81,7 @@ jobs:
           ccache -p
           ccache -s
           echo $HOME
-          cygpath -w $HOMExs
+          cygpath -w $HOME
 
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
