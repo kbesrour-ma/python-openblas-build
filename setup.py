@@ -54,7 +54,7 @@ class MyBuildCLib(build_clib):
         dynamic_arch = int(platform != "win32")
         if platform == "win32":
             dynamic_arch = 0
-            generator = "Visual Studio"
+            generator = "Visual Studio 17 2022"
             builder = ["cmake", "--build", "."]
         else:
             dynamic_arch = 1
