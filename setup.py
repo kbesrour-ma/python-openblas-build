@@ -9,6 +9,7 @@ class bdist_wheel(bdist_wheel_):
         _, _, plat_name = bdist_wheel_.get_tag(self)
         return 'py2.py3', 'none', plat_name
 
+
 from sys import platform
 from shutil import copyfile, copytree
 import glob
@@ -25,7 +26,8 @@ class MyBuildCLib(build_clib):
             import urllib as request
         fname = "v{version}.tar.gz".format(version=OpenBLASVersion)
         print("Downloading OpenBLAS version {}".format(OpenBLASVersion))
-        request.urlretrieve("https://github.com/xianyi/OpenBLAS/archive/v{version}.tar.gz".format(version=OpenBLASVersion), fname)
+        request.urlretrieve(
+            "https://github.com/xianyi/OpenBLAS/archive/v{version}.tar.gz".format(version=OpenBLASVersion), fname)
         import tarfile
         print("Extracting OpenBLAS version {}".format(OpenBLASVersion))
         with tarfile.open(fname, "r:gz") as tar:
@@ -54,12 +56,20 @@ class MyBuildCLib(build_clib):
         dynamic_arch = int(platform != "win32")
         if platform == "win32":
             dynamic_arch = 0
-            generator = "Visual Studio 17 2022"
+            generator = "Ninja"
             builder = ["cmake", "--build", "."]
+            additional_args = [
+                "-DCMAKE_CXX_COMPILER=clang-cl",
+                "-DCMAKE_C_COMPILER=clang-cl",
+                "-DCMAKE_Fortran_COMPILER=flang",
+                "-DCMAKE_MT=mt",
+                "-DDYNAMIC_ARCH=ON",
+            ]
         else:
             dynamic_arch = 1
             generator = "Unix Makefiles"
             builder = ["make", "-j2"]
+            additional_args = []
 
         try:
             os.makedirs(self.build_temp)
@@ -72,14 +82,15 @@ class MyBuildCLib(build_clib):
         guess_libplat = glob.glob(os.path.join(cwd, 'build', 'lib*'))[0]
         install_prefix = os.path.join(guess_libplat, 'python_openblas_build')
         subprocess.check_call(["cmake",
-                               '-G', generator,
-                               '-DCMAKE_BUILD_TYPE=Release',
-                               '-DDYNAMIC_ARCH={}'.format(dynamic_arch),
-                               '-DNOFORTRAN=1',
-                               '-DNO_LAPACK=1',
-                               '-DBUILD_SHARED_LIBS=OFF',
+                               "-G",
+                               generator,
+                               "-DCMAKE_BUILD_TYPE=Release",
+                               "-DDYNAMIC_ARCH={}".format(dynamic_arch),
+                               "-DUSE_THREAD=0",
+                               "-DUSE_OPENMP=0",
+                               "-DBUILD_SHARED_LIBS=OFF",
                                os.path.join(cwd, 'OpenBLAS-{version}'.format(version=OpenBLASVersion)),
-                               "-DCMAKE_INSTALL_PREFIX="+install_prefix])
+                               "-DCMAKE_INSTALL_PREFIX=" + install_prefix, ] + additional_args)
         subprocess.check_call(builder)
         subprocess.check_call(["cmake", "--build", '.', '--target', 'install'])
 
@@ -88,6 +99,7 @@ class MyBuildCLib(build_clib):
         copyfile(guess_libblas, os.path.basename(target_libblas))
 
         os.chdir(cwd)
+
 
 setup(name=name,
       version=OpenBLASVersion,
@@ -100,5 +112,4 @@ setup(name=name,
       url='https://github.com/kbesrour-ma/' + name.replace('_', '-'),
       license="BSD 3-Clause",
       ext_modules=[Extension("python_openblas_build.placeholder", ['python_openblas_build/placeholder.c'])],
-      cmdclass={'build_clib': MyBuildCLib,'bdist_wheel': bdist_wheel})
-
+      cmdclass={'build_clib': MyBuildCLib, 'bdist_wheel': bdist_wheel})
