@@ -13,12 +13,12 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8]
-        msystem: MINGW64
-        idx: int64
-        build-type: Release
-        idx64-flags: -DBINARY=64 -DINTERFACE64=1
-        target-prefix: mingw-w64-x86_64
-        fc-pkg: mingw-w64-x86_64-gcc-fortran
+        msystem: [MINGW64]
+        idx: [int64]
+        build-type: [Release]
+        idx64-flags: [-DBINARY=64 -DINTERFACE64=1]
+        target-prefix: [mingw-w64-x86_64]
+        fc-pkg: [mingw-w64-x86_64-gcc-fortran]
 
     defaults:
       run:
