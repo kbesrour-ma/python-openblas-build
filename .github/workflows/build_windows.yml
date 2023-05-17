@@ -22,18 +22,12 @@ jobs:
 
     defaults:
       run:
-        # Use MSYS2 bash as default shell
-        shell: msys2 {0}
+        shell: bash
 
     env:
       CHERE_INVOKING: 1
 
     steps:
-      - name: Get CPU name
-        shell: pwsh
-        run : |
-          Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
-
       - name: Install build dependencies
         uses: msys2/setup-msys2@v2
         with:
@@ -87,10 +81,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Python path temporal fix
-        run:  echo "%pythonLocation%" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
 
       - name: Upgrade setuptools
         run: |
