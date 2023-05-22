@@ -104,7 +104,7 @@ class MyBuildCLib(build_clib):
         subprocess.check_call(["cmake", "--build", '.', '--target', 'install'])
 
         guess_libblas = glob.glob(os.path.join(install_prefix, 'lib*', '*openblas*'))[0]
-        target_libblas = guess_libblas.replace('openblas', 'python_openblas_build').replace("_64.lib", ".lib")
+        target_libblas = guess_libblas.replace('openblas', 'python_openblas_build').replace("_64.", ".")
         copyfile(guess_libblas, os.path.basename(target_libblas))
 
         os.chdir(cwd)
