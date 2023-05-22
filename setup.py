@@ -71,7 +71,7 @@ class MyBuildCLib(build_clib):
         if platform == "win32":
             dynamic_arch = 0
             builder = ["cmake", "--build", "."]
-            additional_args = [
+            additional_args += [
                 "-DBINARY=64",
                 "-DINTERFACE64=1"
             ]
