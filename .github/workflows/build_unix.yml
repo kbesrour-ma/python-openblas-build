@@ -1,4 +1,4 @@
-name: Build Windows
+name: Build Unix
 
 on: [pull_request]
 

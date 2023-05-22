@@ -58,6 +58,8 @@ class MyBuildCLib(build_clib):
             safe_extract(tar)
 
     def run(self):
+        self.download()
+
         import subprocess
         ccache_build = [
             "-DCMAKE_C_COMPILER_LAUNCHER=ccache",
