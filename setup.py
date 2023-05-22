@@ -19,16 +19,22 @@ name = 'python_openblas_build'
 
 
 class MyBuildCLib(build_clib):
-    def run(self):
+
+    def download(self):
+        import tarfile
         try:
             import urllib.request as request
         except ImportError:
             import urllib as request
+
         fname = "v{version}.tar.gz".format(version=OpenBLASVersion)
-        print("Downloading OpenBLAS version {}".format(OpenBLASVersion))
-        request.urlretrieve(
-            "https://github.com/xianyi/OpenBLAS/archive/v{version}.tar.gz".format(version=OpenBLASVersion), fname)
-        import tarfile
+        if os.path.isfile(fname):
+            print("File present skip download")
+        else:
+            print("Downloading OpenBLAS version {}".format(OpenBLASVersion))
+            request.urlretrieve(
+                "https://github.com/xianyi/OpenBLAS/archive/v{version}.tar.gz".format(version=OpenBLASVersion), fname)
+
         print("Extracting OpenBLAS version {}".format(OpenBLASVersion))
         with tarfile.open(fname, "r:gz") as tar:
             def is_within_directory(directory, target):
@@ -51,24 +57,27 @@ class MyBuildCLib(build_clib):
 
             safe_extract(tar)
 
+    def run(self):
         import subprocess
+        ccache_build = [
+            "-DCMAKE_C_COMPILER_LAUNCHER=ccache",
+            "-DCMAKE_Fortran_COMPILER_LAUNCHER=ccache",
+        ]
+        additional_args = ccache_build if os.getenv("ACTIVE_CCACHE") else []
+
         print("Building OpenBLAS version {}".format(OpenBLASVersion))
-        dynamic_arch = int(platform != "win32")
         if platform == "win32":
             dynamic_arch = 0
-            generator = "Ninja"
             builder = ["cmake", "--build", "."]
             additional_args = [
                 "-DBINARY=64",
-                "-DINTERFACE64=1",
-                "-DCMAKE_C_COMPILER_LAUNCHER=ccache",
-                "-DCMAKE_Fortran_COMPILER_LAUNCHER=ccache",
+                "-DINTERFACE64=1"
             ]
         else:
             dynamic_arch = 1
-            generator = "Unix Makefiles"
             builder = ["make", "-j2"]
-            additional_args = []
+            if platform == "darwin":
+                additional_args += ["-DCMAKE_Fortran_COMPILER=gfortran"]
 
         try:
             os.makedirs(self.build_temp)
@@ -81,8 +90,6 @@ class MyBuildCLib(build_clib):
         guess_libplat = glob.glob(os.path.join(cwd, 'build', 'lib*'))[0]
         install_prefix = os.path.join(guess_libplat, 'python_openblas_build')
         subprocess.check_call(["cmake",
-                               "-G",
-                               generator,
                                "-DCMAKE_BUILD_TYPE=Release",
                                "-DDYNAMIC_ARCH={}".format(dynamic_arch),
                                "-DUSE_THREAD=0",
@@ -94,7 +101,7 @@ class MyBuildCLib(build_clib):
         subprocess.check_call(["cmake", "--build", '.', '--target', 'install'])
 
         guess_libblas = glob.glob(os.path.join(install_prefix, 'lib*', '*openblas*'))[0]
-        target_libblas = guess_libblas.replace('openblas', 'python_openblas_build')
+        target_libblas = guess_libblas.replace('openblas', 'python_openblas_build').replace("_64.lib", ".lib")
         copyfile(guess_libblas, os.path.basename(target_libblas))
 
         os.chdir(cwd)

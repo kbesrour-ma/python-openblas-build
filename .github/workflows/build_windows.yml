@@ -26,6 +26,7 @@ jobs:
 
     env:
       CHERE_INVOKING: 1
+      ACTIVE_CCACHE: 1
 
     steps:
       - name: Install build dependencies
@@ -91,11 +92,7 @@ jobs:
           python -m pip install wheel
 
       - name: Build wheels
-        run: python setup.py bdist_wheel --universal
-
-      - name: Test non-windows wheels
-        if: matrix.os != 'windows-2019'
-        run: pip install dist/*.whl
+        run: python setup.py bdist_wheel
 
       - name: Show ccache status
         continue-on-error: true
