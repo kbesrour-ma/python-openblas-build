@@ -62,6 +62,7 @@ class MyBuildCLib(build_clib):
 
         import subprocess
         ccache_build = [
+            '-G "MinGW Makefiles"',
             "-DCMAKE_C_COMPILER_LAUNCHER=ccache",
             "-DCMAKE_Fortran_COMPILER_LAUNCHER=ccache",
         ]
@@ -69,14 +70,8 @@ class MyBuildCLib(build_clib):
 
         print("Building OpenBLAS version {}".format(OpenBLASVersion))
         if platform == "win32":
-            dynamic_arch = 0
             builder = ["cmake", "--build", "."]
-            additional_args += [
-                "-DBINARY=64",
-                "-DINTERFACE64=1"
-            ]
         else:
-            dynamic_arch = 1
             builder = ["make", "-j2"]
             if platform == "darwin":
                 additional_args += ["-DCMAKE_Fortran_COMPILER=gfortran"]
@@ -93,7 +88,7 @@ class MyBuildCLib(build_clib):
         install_prefix = os.path.join(guess_libplat, 'python_openblas_build')
         subprocess.check_call(["cmake",
                                "-DCMAKE_BUILD_TYPE=Release",
-                               "-DDYNAMIC_ARCH={}".format(dynamic_arch),
+                               "-DDYNAMIC_ARCH=ON",
                                "-DUSE_THREAD=0",
                                "-DUSE_OPENMP=0",
                                "-DBUILD_SHARED_LIBS=OFF",
