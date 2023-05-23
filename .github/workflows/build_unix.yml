@@ -9,14 +9,14 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     containers:
-    image: quay.io/pypa/manylinux_2_24_x86_64
+    image: quay.io/pypa/manylinux_2_24_x86_64:latest
     environment: pypi
 
     strategy:
       fail-fast: false
       matrix:
         python-version: [ 3.8 ]
-        os: [ubuntu=latest]
+        os: [ubuntu-latest]
 
     env:
       ACTIVE_CCACHE: 1
