@@ -62,7 +62,6 @@ class MyBuildCLib(build_clib):
 
         import subprocess
         ccache_build = [
-            '-G "MinGW Makefiles"',
             "-DCMAKE_C_COMPILER_LAUNCHER=ccache",
             "-DCMAKE_Fortran_COMPILER_LAUNCHER=ccache",
         ]
@@ -71,6 +70,7 @@ class MyBuildCLib(build_clib):
         print("Building OpenBLAS version {}".format(OpenBLASVersion))
         if platform == "win32":
             builder = ["cmake", "--build", "."]
+            additional_args += ['-G "MSYS Makefiles"']
         else:
             builder = ["make", "-j2"]
             if platform == "darwin":
