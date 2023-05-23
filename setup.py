@@ -72,7 +72,7 @@ class MyBuildCLib(build_clib):
             dynamic_arch = 0
             builder = ["cmake", "--build", "."]
             additional_args += [
-                "-G Ninja",
+                "-G Visual Studio 17 2022",
                 "-DBINARY=64",
                 "-DINTERFACE64=1"
             ]
