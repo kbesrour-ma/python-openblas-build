@@ -70,6 +70,10 @@ class MyBuildCLib(build_clib):
         print("Building OpenBLAS version {}".format(OpenBLASVersion))
         if platform == "win32":
             builder = ["cmake", "--build", "."]
+            additional_args += [
+                "-DBINARY=64",
+                "-DINTERFACE64=1"
+            ]
         else:
             builder = ["make", "-j2"]
             if platform == "darwin":
