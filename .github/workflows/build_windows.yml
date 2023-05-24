@@ -99,7 +99,7 @@ jobs:
       - name: Build a binary wheel and a source tarball
         if: github.ref != 'refs/heads/master'
         run: |
-          python -m build --plat-name=manylinux2014_x86_64 --sdist --wheel --outdir dist/
+          python -m build -sdist --wheel --outdir dist/
 
       - name: Build wheels
         if: github.ref == 'refs/heads/master'
