@@ -63,7 +63,7 @@ jobs:
           python3.8 -m pip install build twine cibuildwheel
 
       - name: Build a binary wheel and a source tarball
-        if: github.ref <> 'refs/heads/master'
+        if: github.ref != 'refs/heads/master'
         run: |
           python3.8 -m build --sdist --wheel --outdir dist/
 
@@ -72,7 +72,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.12.3
 
       - name: Publish distribution 📦 to Test PyPI
-        if: github.ref <> 'refs/heads/master'
+        if: github.ref != 'refs/heads/master'
         run: |
           python3.8 -m twine upload -u __token__ -p ${{ secrets.TEST_PYPI_API_TOKEN }} --repository --skip-existing testpypi dist/*
 
