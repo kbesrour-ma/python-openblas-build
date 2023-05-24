@@ -28,16 +28,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
             sudo apt-get install -y gfortran cmake ccache libtinfo5
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            # It looks like "gfortran" isn't working correctly unless "gcc" is re-installed.
-            brew reinstall gcc
-            brew install coreutils cmake ccache
-          else
-            echo "::error::$RUNNER_OS not supported"
-            exit 1
-          fi
 
       - name: Compilation cache
         uses: actions/cache@v3
@@ -57,17 +48,7 @@ jobs:
 
       - name: Configure ccache
         run: |
-          if [ "${{ matrix.build }}" = "make" ]; then
-            # Add ccache to path
-            if [ "$RUNNER_OS" = "Linux" ]; then
-              echo "/usr/lib/ccache" >> $GITHUB_PATH
-            elif [ "$RUNNER_OS" = "macOS" ]; then
-              echo "$(brew --prefix)/opt/ccache/libexec" >> $GITHUB_PATH
-            else
-              echo "::error::$RUNNER_OS not supported"
-              exit 1
-            fi
-          fi
+          echo "/usr/lib/ccache" >> $GITHUB_PATH
           # Limit the maximum size and switch on compression to avoid exceeding the total disk or cache quota (5 GB).
           test -d ~/.ccache || mkdir -p ~/.ccache
           echo "max_size = 300M" > ~/.ccache/ccache.conf
@@ -93,7 +74,7 @@ jobs:
 
       - name: Publish distribution 📦 to Test PyPI
         run: |
-          python -m twine upload  --config-file .pypirc --repository testpypi dist/*
+          python3 -m twine upload -u __token__ -p ${{ secrets.TEST_PYPI_API_TOKEN }} --repository testpypi dist/*
 
       - name: Show ccache status
         continue-on-error: true
