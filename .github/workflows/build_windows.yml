@@ -65,11 +65,11 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: ${{ steps.ccache-prepare.outputs.ccachedir }}
-          key: ${{ steps.ccache-prepare.outputs.key }}
-          # Restore a matching ccache cache entry. Prefer same branch.
+          key: ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
+          # Restore a matching ccache cache entry. Prefer same branch and same Fortran compiler.
           restore-keys: |
-            ccache-msys2-${{ matrix.msystem }}-${{ matrix.idx }}-${{ matrix.build-type }}-${{ github.ref }}
-            ccache-msys2-${{ matrix.msystem }}-${{ matrix.idx }}-${{ matrix.build-type }}
+            ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
+            ccache-${{ runner.os }}-${{ matrix.build }}
 
       - name: Configure ccache
         # Limit the maximum size and switch on compression to avoid exceeding the total disk or cache quota.
@@ -99,7 +99,7 @@ jobs:
       - name: Build a binary wheel and a source tarball
         if: github.ref != 'refs/heads/master'
         run: |
-          python -m build --sdist --wheel --outdir dist/
+          python -m build --plat-name=manylinux2014_x86_64 --sdist --wheel --outdir dist/
 
       - name: Build wheels
         if: github.ref == 'refs/heads/master'
@@ -124,5 +124,4 @@ jobs:
         uses: actions/cache/save@v3
         with:
           path: ${{ steps.ccache-prepare.outputs.ccachedir }}
-          key: ${{ steps.ccache-prepare.outputs.key }}
-
+          key: ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
