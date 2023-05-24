@@ -26,17 +26,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Print system information
-        run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            cat /proc/cpuinfo
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            sysctl -a | grep machdep.cpu
-          else
-            echo "::error::$RUNNER_OS not supported"
-            exit 1
-          fi
-
       - name: Install Dependencies
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
