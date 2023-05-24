@@ -15,6 +15,7 @@ from shutil import copyfile, copytree
 import glob
 
 OpenBLASVersion = '0.3.23'
+ProjectVersion = f"{OpenBLASVersion}-0.0.1"
 name = 'python_openblas_build'
 
 
@@ -110,7 +111,7 @@ class MyBuildCLib(build_clib):
 
 
 setup(name=name,
-      version=OpenBLASVersion,
+      version=ProjectVersion,
       packages=[name],
       libraries=[(name, {'sources': []})],
       description='Python packaging of OpenBLAS',
