@@ -8,6 +8,7 @@ permissions:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    environment: pypi
 
     strategy:
       fail-fast: false

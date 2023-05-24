@@ -27,7 +27,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-            yum install -y gfortran cmake ccache libtinfo5
+            yum install -y cmake ccache
 
       - name: Compilation cache
         uses: actions/cache@v3
