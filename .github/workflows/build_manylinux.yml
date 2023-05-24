@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-            sudo apt-get install -y gfortran cmake ccache libtinfo5
+            apt-get install -y gfortran cmake ccache libtinfo5
 
       - name: Compilation cache
         uses: actions/cache@v3
