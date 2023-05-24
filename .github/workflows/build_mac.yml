@@ -1,4 +1,4 @@
-name: Build Unix
+name: Build MAC-OS
 
 on: [pull_request]
 
