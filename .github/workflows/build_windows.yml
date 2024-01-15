@@ -71,17 +71,25 @@ jobs:
             ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
             ccache-${{ runner.os }}-${{ matrix.build }}
 
-      - name: Configure ccache
-        # Limit the maximum size and switch on compression to avoid exceeding the total disk or cache quota.
-        run: |
-          which ccache
-          test -d ${{ steps.ccache-prepare.outputs.ccachedir }} || mkdir -p ${{ steps.ccache-prepare.outputs.ccachedir }}
-          echo "max_size = 250M" > ${{ steps.ccache-prepare.outputs.ccachedir }}/ccache.conf
-          echo "compression = true" >> ${{ steps.ccache-prepare.outputs.ccachedir }}/ccache.conf
-          ccache -p
-          ccache -s
-          echo $HOME
-          cygpath -w $HOME
+#      - name: Configure ccache
+#        # Limit the maximum size and switch on compression to avoid exceeding the total disk or cache quota.
+#        run: |
+#          which ccache
+#          test -d ${{ steps.ccache-prepare.outputs.ccachedir }} || mkdir -p ${{ steps.ccache-prepare.outputs.ccachedir }}
+#          echo "max_size = 250M" > ${{ steps.ccache-prepare.outputs.ccachedir }}/ccache.conf
+#          echo "compression = true" >> ${{ steps.ccache-prepare.outputs.ccachedir }}/ccache.conf
+#          ccache -p
+#          ccache -s
+#          echo $HOME
+#          cygpath -w $HOME
+
+      - name: Setup ccache
+        uses: Chocobo1/setup-ccache-action@v1
+        with:
+          windows_compile_environment: msvc  # this field is required
+          ccache_options: |
+            max_size=250M
+            compression=true
 
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -103,7 +111,7 @@ jobs:
 
       - name: Build wheels
         if: github.ref == 'refs/heads/master'
-        uses: pypa/cibuildwheel@v2.12.3
+        uses: pypa/cibuildwheel@v2.13.1
 
       - name: Publish distribution 📦 to Test PyPI
         if: github.ref != 'refs/heads/master'
