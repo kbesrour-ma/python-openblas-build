@@ -1,4 +1,4 @@
-name: Build MAC-OS
+name: Build MAC-OS X86
 
 on:
   pull_request:
