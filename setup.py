@@ -14,8 +14,8 @@ from sys import platform
 from shutil import copyfile, copytree
 import glob
 
-OpenBLASVersion = '0.3.23'
-ProjectVersion = f"{OpenBLASVersion}preview5"
+OpenBLASVersion = '0.3.28'
+ProjectVersion = f"{OpenBLASVersion}preview0"
 name = 'python_openblas_build'
 
 
