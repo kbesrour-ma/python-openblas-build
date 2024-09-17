@@ -22,7 +22,7 @@ jobs:
 
     env:
       ACTIVE_CCACHE: 1
-      CIBW_ARCHS_MACOS: x86_64 arm64
+      CIBW_ARCHS_MACOS: arm64
 
     steps:
       - name: Checkout repository
@@ -46,12 +46,12 @@ jobs:
           # GNU make and cmake call the compilers differently. It looks like
           # that causes the cache to mismatch. Keep the ccache for both build
           # tools separate to avoid polluting each other.
-          key: ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
+          key: ccache-${{ runner.os }}-${{ matrix.build }}-${{CIBW_ARCHS_MACOS}}-${{ github.ref }}
           # Restore a matching ccache cache entry. Prefer same branch and same Fortran compiler.
           restore-keys: |
-            ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
-            ccache-${{ runner.os }}-${{ matrix.build }}-${{ matrix.fortran }}
-            ccache-${{ runner.os }}-${{ matrix.build }}
+            ccache-${{ runner.os }}-${{ matrix.build }}-${{CIBW_ARCHS_MACOS}}-${{ github.ref }}
+            ccache-${{ runner.os }}-${{ matrix.build }}-${{CIBW_ARCHS_MACOS}}-${{ matrix.fortran }}
+            ccache-${{ runner.os }}-${{ matrix.build }}-${{CIBW_ARCHS_MACOS}}
 
       - name: Configure ccache
         run: |
