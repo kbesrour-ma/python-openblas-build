@@ -46,12 +46,12 @@ jobs:
           # GNU make and cmake call the compilers differently. It looks like
           # that causes the cache to mismatch. Keep the ccache for both build
           # tools separate to avoid polluting each other.
-          key: ccache-${{ runner.os }}-${{ matrix.build }-${{ github.ref }}
+          key: ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
           # Restore a matching ccache cache entry. Prefer same branch and same Fortran compiler.
           restore-keys: |
-            ccache-${{ runner.os }}-${{ matrix.build }-${{ github.ref }}
-            ccache-${{ runner.os }}-${{ matrix.build }-${{ matrix.fortran }}
-            ccache-${{ runner.os }}-${{ matrix.build }
+            ccache-${{ runner.os }}-${{ matrix.build }}-${{ github.ref }}
+            ccache-${{ runner.os }}-${{ matrix.build }}-${{ matrix.fortran }}
+            ccache-${{ runner.os }}-${{ matrix.build }}
 
       - name: Configure ccache
         run: |
