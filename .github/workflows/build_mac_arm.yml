@@ -78,7 +78,7 @@ jobs:
 
       - name: Build wheels
 #        if: github.ref == 'refs/heads/master'
-        uses: pypa/cibuildwheel@v2.22.1
+        uses: pypa/cibuildwheel@v2.21.1
 
       - name: Publish distribution 📦 to Test PyPI
         if: github.ref != 'refs/heads/master'
